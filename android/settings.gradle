@@ -3,3 +3,7 @@ rootProject.name = 'ReactNativeExampleNavigator'
 include ':ReactNativeBarcodescanner', ':react-native-sqlite-storage', ':app'
 project(':ReactNativeBarcodescanner').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-barcodescanner/android')
 project(':react-native-sqlite-storage').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sqlite-storage/src/android')
+
+// react-native-device-info dependency
+include ':react-native-device-info'
+project(':react-native-device-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-device-info/android')
