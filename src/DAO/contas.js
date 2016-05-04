@@ -1,5 +1,5 @@
-import {SQLite} from 'react-native-sqlite-storage';
-import {moment} from 'moment';
+import SQLite from 'react-native-sqlite-storage';
+import moment from 'moment';
 
 export default class ContasDAO {
 
@@ -68,28 +68,24 @@ export default class ContasDAO {
         return promise
     }
 
-    getList()
+    getList(callback)
     {
-        const promise = new Promise();
-
         this.db.transaction((tx) => {
             tx.executeSql("SELECT * FROM contas WHERE usuario <> '' OR usuario <> null ",
               [],
-              (tx, result) => this.extractResult(result, promise),
-              (err) => promise.reject(err)
+              (tx, result) => this.extractResult(result, callback),
+              (err) =>  alert(JSON.stringify(err))
             );
         });
-
-        return promise;
     }
 
-    extractResult(results, promise)
+    extractResult(results, callback)
     {
         var result = []
         for (let i = 0, len = results.row.length; i < len; i++)
              result.push(results.rows.item(i));
 
-        promise.resolve(result);
+        callback(result);
     }
 
     insert(objeto)
@@ -98,14 +94,15 @@ export default class ContasDAO {
 
       this.db.transaction((tx) => {
         return this.db.executeSql(`INSERT INTO contas(nome, usuario, hash, token, created_token) VALUES(?, ?, ?, ?, ?)`,[
-            objeto.nome,
-            objeto.usuario,
-            objeto.hash,
-            objeto.token,
-            moment().format('YYYY-MM-DD H:mm:ss')
-        ],
-        () => promise.resolve({success: true}),
-        (err) => promise.reject(err));
+              objeto.nome,
+              objeto.usuario,
+              objeto.hash,
+              objeto.token,
+              moment().format('YYYY-MM-DD H:mm:ss')
+          ],
+          () => promise.resolve({success: true}),
+          (err) => promise.reject(err)
+        );
       });
 
       return promise;
@@ -117,9 +114,10 @@ export default class ContasDAO {
 
         this.db.transaction((tx) => {
           return tx.executeSql("UPDATE contas SET token = ?, created_token = ? WHERE id = ?",
-          [ token, moment().format('YYYY-MM-DD H:mm:ss'), id ],
-          () => promise.resolve({success: true}),
-          (err) => promise.reject(err
+            [ token, moment().format('YYYY-MM-DD H:mm:ss'), id ],
+            () => promise.resolve({success: true}),
+            (err) => promise.reject(err)
+          );
         });
 
         return promise;

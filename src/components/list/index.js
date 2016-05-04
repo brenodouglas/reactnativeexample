@@ -1,14 +1,15 @@
 import React, { Component, View, ScrollView, Text, ListView, StyleSheet} from 'react-native';
-
+import ContasDAO from './../../DAO/contas';
 export default class ListComponent extends Component
 {
 
   constructor()
   {
     super();
-    let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.dao = new ContasDAO();
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: ds.cloneWithRows(this._genRows({}))
+      dataSource: this.ds.cloneWithRows([])
     };
   }
   _genRows(pressData: {[key: number]: boolean}): Array<string> {
@@ -28,6 +29,7 @@ export default class ListComponent extends Component
           <ListView
             dataSource={this.state.dataSource}
             renderRow={(rowData) => <Text>{rowData}</Text>}
+            enableEmptySections={true}
           />
         </ScrollView>
       </View>

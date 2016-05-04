@@ -126,6 +126,7 @@ dependencies {
     compile project(':ReactNativeBarcodescanner')
     compile project(':react-native-sqlite-storage')
 
+    compile project(':react-native-splashscreen')
     compile project(":react-native-device-info")
     compile fileTree(dir: "node_modules/react-native-device-info/android/libs", include: ["*.jar"])
 }

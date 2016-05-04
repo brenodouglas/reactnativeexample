@@ -12,8 +12,13 @@ import React, {
 import {AppAndroid} from './src/containers/app';
 import {AndroidHome} from './src/containers/home';
 import {QRCodeAndroid} from './src/components/qrcode';
+import SplashScreen from '@remobile/react-native-splashscreen';
 
 class ReactNativeExampleNavigator extends Component {
+  componentDidMount() {
+      SplashScreen.hide();
+  }
+  
   render() {
     return (
         <Navigator

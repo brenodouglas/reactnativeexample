@@ -6,6 +6,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.eguma.barcodescanner.BarcodeScanner;
 import org.pgsqlite.SQLitePluginPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.remobile.splashscreen.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +41,8 @@ public class MainActivity extends ReactActivity {
             new RNDeviceInfo(),
             new MainReactPackage(),
             new BarcodeScanner(),
-            new SQLitePluginPackage(this)
+            new SQLitePluginPackage(this),
+            new RCTSplashScreenPackage(this)
         );
     }
 }
