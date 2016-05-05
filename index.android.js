@@ -10,26 +10,21 @@ import React, {
 } from 'react-native';
 
 import {AppAndroid} from './src/containers/app';
-import {AndroidHome} from './src/containers/home';
-import {QRCodeAndroid} from './src/components/qrcode';
+import Home from './src/containers/home';
 import SplashScreen from '@remobile/react-native-splashscreen';
 
 class ReactNativeExampleNavigator extends Component {
+
   componentDidMount() {
       SplashScreen.hide();
   }
-  
+
   render() {
     return (
         <Navigator
-          initialRoute={{name: 'list', index: 0}}
+          initialRoute={{name: 'list', index: 0, component: Home}}
           renderScene={(route, navigator) => {
-            if(route.name == 'list')
-              return <AppAndroid title="BBOMGuard">
-                        <AndroidHome name={route.name} navigator={navigator} index={route.index} />
-                     </AppAndroid>
-            else if(route.name = 'qrCode')
-              return <QRCodeAndroid name={route.name} navigator={navigator} index={route.index} />
+              return <route.component name={route.name} navigator={navigator} index={route.index} />
           }}
         />
     );

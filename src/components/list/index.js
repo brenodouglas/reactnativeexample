@@ -1,5 +1,8 @@
 import React, { Component, View, ScrollView, Text, ListView, StyleSheet} from 'react-native';
 import ContasDAO from './../../DAO/contas';
+import moment from 'moment';
+import Progress from './../../components/progress';
+
 export default class ListComponent extends Component
 {
 
@@ -9,7 +12,9 @@ export default class ListComponent extends Component
     this.dao = new ContasDAO();
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: this.ds.cloneWithRows([])
+      dataSource: this.ds.cloneWithRows([{
+        datetime: moment().format('YYYY-MM-DD H:mm:ss')
+      }])
     };
   }
   _genRows(pressData: {[key: number]: boolean}): Array<string> {
@@ -28,7 +33,7 @@ export default class ListComponent extends Component
         <ScrollView style={{backgroundColor: '#fff'}}>
           <ListView
             dataSource={this.state.dataSource}
-            renderRow={(rowData) => <Text>{rowData}</Text>}
+            renderRow={(rowData) => <Progress datetime={rowData.datetime} />}
             enableEmptySections={true}
           />
         </ScrollView>
