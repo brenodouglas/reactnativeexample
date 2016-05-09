@@ -32,6 +32,20 @@ export default class Home extends Component
     });
   }
 
+  search(text)
+  {
+      this.setState({...this.state, text: text});
+
+      if(this.id)
+        clearTimeout(this.id);
+
+      this.id = setTimeout(() => {
+        this.state.dao.search(text, (result) => {
+            this.setState({...this.state, dataProvider: result});
+        });
+      }, 500);
+  }
+
   openQrdCode()
   {
       this.props.navigator.push({
@@ -67,7 +81,7 @@ export default class Home extends Component
      });
   }
 
-  refreshToken(id)
+  refreshToken(id, callback)
   {
     this.setState({...this.state, visible: true});
     this.state.dao.getById(id, (err, result) => {
@@ -76,6 +90,7 @@ export default class Home extends Component
             api.refreshToken(result.hash).then(response => {
                 this.state.dao.refreshToken(result.id, response.token, (err, success) => {
                     this.refreshList();
+                    setTimeout(callback, 500);
                 });
             });
         } else {
@@ -99,7 +114,7 @@ export default class Home extends Component
         <View style={styles.container}>
           <ListComponent
             provider={dataProvider}
-            onRefresh={(id) => this.refreshToken(id)}
+            onRefresh={(id, callback) => this.refreshToken(id, callback)}
             onApiRegister={() => this.register()} />
         </View>
       );
@@ -112,9 +127,12 @@ export default class Home extends Component
         template =  (
             <AppAndroid title="BBOMGuard">
               <TextInput
-                style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                onChangeText={(text) => this.setState({...this.state, text: text})}
+                style={{height: 60, borderColor: '#112255', borderWidth: 2}}
+                onChangeText={(text) => this.search(text)}
                 value={this.state.text}
+                placeholder="Busca de usuário.."
+                placeholderTextColor="#CCC"
+                underlineColorAndroid="#112255"
               />
 
               {view}
@@ -142,6 +160,7 @@ export default class Home extends Component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#FFFFF',
+    borderColor: '#FFFFF'
   }
 });

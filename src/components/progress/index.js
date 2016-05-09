@@ -17,7 +17,7 @@ export default class Progress extends Component
   {
     clearInterval(this.id);
   }
-  
+
   componentDidMount()
   {
     this.getProgress(this.props.datetime);
@@ -32,6 +32,9 @@ export default class Progress extends Component
 
     let progress = 100 * (moment().toDate().getTime() - created.toDate().getTime()) / interval;
     this.setState({progress: progress/100, finish: false});
+
+    if(this.id)
+      clearInterval(this.id);
 
     this.id = setInterval(() => {
         let progress = 100 * (Date.now() - created.toDate().getTime()) / interval;
@@ -52,7 +55,9 @@ export default class Progress extends Component
 
   refresh()
   {
-    this.props.onRefresh && this.props.onRefresh();
+    this.props.onRefresh && this.props.onRefresh(() => {
+      this.getProgress(this.props.datetime);
+    });
   }
 
   render()

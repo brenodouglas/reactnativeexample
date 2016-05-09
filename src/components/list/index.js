@@ -30,7 +30,7 @@ export default class ListComponent extends Component
           </Text>
         </View>
         <View style={styles.progressContainer}>
-          <Progress datetime={rowData.created_token} onRefresh={() => this.props.onRefresh(rowData.id)}/>
+          <Progress datetime={rowData.created_token} onRefresh={(callback) => this.props.onRefresh(rowData.id, callback)}/>
         </View>
       </View>
     );
@@ -97,7 +97,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: 6,
     backgroundColor: '#FFF',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    borderWidth: 0,
+    borderColor: '#FFF'
   },
   textEmpty: {
     justifyContent: 'center',

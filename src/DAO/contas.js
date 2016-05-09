@@ -49,13 +49,13 @@ export default class ContasDAO {
         });
     }
 
-    search(text)
+    search(text, callback)
     {
         this.db.transaction((tx) => {
             tx.executeSql(`SELECT * FROM contas WHERE usuario LIKE '%${text}%'`,
               [],
-              (tx, result) => this.extractResult(result, promise),
-              (err) => promise.reject(err)
+              (tx, result) => this.extractResult(result, callback),
+              (err) => callback(null)
             );
         });
 
@@ -99,8 +99,6 @@ export default class ContasDAO {
 
     refreshToken(id, token, callback)
     {
-        alert(moment().format('YYYY-MM-DD H:mm:ss'));
-        
         this.db.transaction((tx) => {
           return tx.executeSql("UPDATE contas SET token = ?, created_token = ? WHERE id = ?",
             [ token, moment().format('YYYY-MM-DD H:mm:ss'), id ],
