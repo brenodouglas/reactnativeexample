@@ -6,7 +6,9 @@
 import React, {
   AppRegistry,
   Component,
-  Navigator
+  Navigator,
+  StatusBar,
+  View
 } from 'react-native';
 
 import {AppAndroid} from './src/containers/app';
@@ -23,8 +25,20 @@ class ReactNativeExampleNavigator extends Component {
     return (
         <Navigator
           initialRoute={{name: 'list', index: 0, component: Home}}
+          configureScene={(route, routeStack) => Navigator.SceneConfigs.FadeAndroid}
           renderScene={(route, navigator) => {
-              return <route.component name={route.name} navigator={navigator} index={route.index} />
+              return <View style={{flex: 1,
+              justifyContent: 'center',
+              backgroundColor: '#FFF'}}>
+                        <StatusBar
+                           backgroundColor="#203267"
+                           barStyle="light-content"
+                         />
+                        <route.component
+                        name={route.name}
+                        navigator={navigator}
+                        index={route.index} />
+                    </View>
           }}
         />
     );

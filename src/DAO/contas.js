@@ -82,7 +82,7 @@ export default class ContasDAO {
     extractResult(results, callback)
     {
         var result = []
-        for (let i = 0, len = results.row.length; i < len; i++)
+        for (let i = 0, len = results.rows.length; i < len; i++)
              result.push(results.rows.item(i));
 
         callback(result);
@@ -94,8 +94,8 @@ export default class ContasDAO {
 
       this.db.transaction((tx) => {
         return this.db.executeSql(`INSERT INTO contas(nome, usuario, hash, token, created_token) VALUES(?, ?, ?, ?, ?)`,[
-              objeto.nome,
-              objeto.usuario,
+              '',
+              objeto.customer,
               objeto.hash,
               objeto.token,
               moment().format('YYYY-MM-DD H:mm:ss')

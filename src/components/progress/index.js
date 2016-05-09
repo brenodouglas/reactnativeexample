@@ -1,6 +1,7 @@
-import React, {Component} from 'react-native';
+import React, {Component, View, TouchableOpacity   } from 'react-native';
 import ProgressBar from 'react-native-progress-bar';
 import moment from 'moment';
+import { Icon } from 'react-native-material-design';
 
 export default class Progress extends Component
 {
@@ -8,10 +9,15 @@ export default class Progress extends Component
     super();
     this.state = {
       progress: 0,
-      finsh: false
+      finish: false
     }
   }
 
+  componentWillUnmount()
+  {
+    clearInterval(this.id);
+  }
+  
   componentDidMount()
   {
     this.getProgress(this.props.datetime);
@@ -33,24 +39,51 @@ export default class Progress extends Component
 
         if(progress >= 100) {
           clearInterval(this.id);
-          if(this.props.onFinish)
-            this.props.onFinish(progress/100);
+          this.setState({progress: progress/100, finish: true});;
         }
-        
+
      }, 100);
 
+     if(progress >= 100){
+       clearInterval(this.id);
+       this.setState({progress: progress/100, finish: true});
+     }
+  }
+
+  refresh()
+  {
+    this.props.onRefresh && this.props.onRefresh();
   }
 
   render()
   {
-     let {datetime} = this.props
-     return (
-       <ProgressBar
-          fillStyle={{}}
-          backgroundStyle={{backgroundColor: '#cccccc', borderRadius: 2}}
-          style={{marginTop: 10, width: 200}}
-          progress={this.state.progress}
-        />
+     let {datetime} = this.props;
+     let component;
+
+     if(! this.state.finish) {
+       component = (
+        <ProgressBar
+           fillStyle={{height: 20, borderRadius: 4, backgroundColor: '#112255'}}
+           backgroundStyle={{backgroundColor: '#cccccc', borderRadius: 4}}
+           style={{marginTop: 10, height: 20, width: 200}}
+           progress={this.state.progress}
+           ref="progressBar"
+         />
+       );
+     } else {
+       component = (
+          <TouchableOpacity onPress={() => this.refresh()} >
+            <View>
+              <Icon name="autorenew" color="#112255" style={{marginRight: 20}} size={50} />
+            </View>
+          </TouchableOpacity >
       );
+     }
+
+     return (
+      <View >
+        {component}
+      </View>
+    );
   }
 }
