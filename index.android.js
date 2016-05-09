@@ -16,11 +16,19 @@ import Home from './src/containers/home';
 import SplashScreen from '@remobile/react-native-splashscreen';
 import ActionButton from 'react-native-action-button';
 import { Icon } from 'react-native-material-design';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 class ReactNativeExampleNavigator extends Component {
 
   componentDidMount() {
       SplashScreen.hide();
+  }
+
+  constructor(props) {
+    super();
+    this.state = {
+      visible: false
+    };
   }
 
   render() {
@@ -36,10 +44,11 @@ class ReactNativeExampleNavigator extends Component {
                      backgroundColor="#203267"
                      barStyle="light-content"
                    />
+
                   <route.component
-                  name={route.name}
-                  navigator={navigator}
-                  index={route.index} />
+                    name={route.name}
+                    navigator={navigator}
+                    index={route.index} />
               </View>
           }}
         />

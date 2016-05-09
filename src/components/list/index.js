@@ -1,7 +1,6 @@
 import React, {AsyncStorage, Component, View, ScrollView, Text, ListView, StyleSheet, Image, TextInput, Alert} from 'react-native';
 import Api from './../../services/api';
 import ContasDAO from './../../DAO/contas';
-import Spinner from 'react-native-loading-spinner-overlay';
 import moment from 'moment';
 import Progress from './../../components/progress';
 import { Icon } from 'react-native-material-design';
@@ -12,46 +11,10 @@ export default class ListComponent extends Component
   constructor()
   {
     super();
-
-    this.dao = new ContasDAO();
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: this.ds.cloneWithRows([]),
-      result: [],
-      visible: true,
-      dao: new ContasDAO()
+      dataSource: this.ds.cloneWithRows([])
     };
-
-    this.refreshList();
-  }
-
-  componentWillMount()
-  {
-    AsyncStorage.getItem('token', (err, result) => {
-      if (! err && result) {
-        let api = new Api();
-
-        api.getToken(result).then(response => {
-          if(response.status == false){
-            Alert.alert('Mensagem', response.message);
-          } else {
-            this.state.dao.insert(response, (error, result) => {
-              if(error)
-                alert(JSON.stringify(error));
-              this.refreshList();
-            });
-          }
-
-          AsyncStorage.removeItem('token');
-        });
-      }
-     });
-  }
-
-  refreshList(){
-      this.dao.getList((result) => {
-        this.setState({...this.state, dataSource: this.ds.cloneWithRows(result), result: result});
-      });
   }
 
   _renderRow(rowData)
@@ -67,38 +30,29 @@ export default class ListComponent extends Component
           </Text>
         </View>
         <View style={styles.progressContainer}>
-          <Progress datetime={rowData.created_token} onRefresh={() => this.refreshList()}/>
+          <Progress datetime={rowData.created_token} onRefresh={() => this.props.onRefresh(rowData.id)}/>
         </View>
       </View>
     );
 
   }
 
-  __renderSearch()
-  {
-    return (
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(text) => console.log(text)}
-        value={'tes'}
-      />
-    );
-  }
-
   __renderList()
   {
+    const {provider} = this.props;
+    const dataSource = this.ds.cloneWithRows(provider);
+
     return (
-      <View style={{flexDirection: 'column', flex: 1, alignItems: 'center'}}>
-        {this.__renderSearch()}
-        <ScrollView style={{backgroundColor: '#fff'}}>
-           <ListView
-             dataSource={this.state.dataSource}
-             renderRow={(rowData) => this._renderRow(rowData)}
-             renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={styles.separator} />}
-             enableEmptySections={true}
-           />
-         </ScrollView>
-       </View>
+        <View style={styles.container}>
+          <ScrollView style={{backgroundColor: '#fff'}}>
+             <ListView
+               dataSource={dataSource}
+               renderRow={(rowData) => this._renderRow(rowData)}
+               renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={styles.separator} />}
+               enableEmptySections={true}
+             />
+           </ScrollView>
+         </View>
     );
   }
 
@@ -121,10 +75,10 @@ export default class ListComponent extends Component
 
   render()
   {
-    const {result} = this.state;
+    const {provider} = this.props;
     let listSection;
 
-    if(result.length > 0)
+    if(provider.length > 0)
       listSection = this.__renderList();
     else
       listSection = this.__renderEmpty();
@@ -142,11 +96,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     margin: 6,
+    backgroundColor: '#FFF',
     flexDirection: 'row'
   },
   textEmpty: {
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  containerSearch: {
+    flex: 1,
+    justifyContent: 'center',
+    margin: 6,
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 40
   },
   containerRow: {
     flex: 1,

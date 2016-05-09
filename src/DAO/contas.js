@@ -38,25 +38,19 @@ export default class ContasDAO {
       return promise;
     }
 
-    getById(id)
+    getById(id, callback)
     {
-        const promise = new Promise();
-
         this.db.transaction((tx) => {
             tx.executeSql("SELECT * FROM contas WHERE id = ?",
               [id],
-              (tx, result) => promise.resolve(results.rows.item(0)),
-              (err) => promise.reject(err)
+              (tx, result) => callback(null, result.rows.item(0)),
+              (err) => callback(err, null)
             );
         });
-
-        return promise;
     }
 
     search(text)
     {
-        const promise = new Promise();
-
         this.db.transaction((tx) => {
             tx.executeSql(`SELECT * FROM contas WHERE usuario LIKE '%${text}%'`,
               [],
@@ -65,7 +59,6 @@ export default class ContasDAO {
             );
         });
 
-        return promise
     }
 
     getList(callback)
@@ -106,6 +99,8 @@ export default class ContasDAO {
 
     refreshToken(id, token, callback)
     {
+        alert(moment().format('YYYY-MM-DD H:mm:ss'));
+        
         this.db.transaction((tx) => {
           return tx.executeSql("UPDATE contas SET token = ?, created_token = ? WHERE id = ?",
             [ token, moment().format('YYYY-MM-DD H:mm:ss'), id ],
