@@ -10,6 +10,7 @@
     "moment": "^2.13.0",
     "react": "^0.14.8",
     "react-native": "^0.24.1",
+    "react-native-action-button": "^1.1.4",
     "react-native-barcodescanner": "^1.0.1",
     "react-native-device-info": "^0.9.3",
     "react-native-loading-spinner-overlay": "0.0.8",

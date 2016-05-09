@@ -1,4 +1,5 @@
 import React, {Component, View, ToolbarAndroid, StyleSheet} from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export class AppAndroid extends Component
 {

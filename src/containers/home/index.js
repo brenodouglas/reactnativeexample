@@ -1,12 +1,17 @@
-import React, {Component, StyleSheet, View, Platform} from 'react-native';
+import React, {Component, StyleSheet, View, Platform, AsyncStorage} from 'react-native';
 import NovaConta from './../../components/novaConta';
 import ListComponent from './../../components/list';
 import {BUTTON_PRIMARY, TEXT} from './../../services/colors';
 import {AppAndroid} from './../app';
 import {QRCodeAndroid} from './../qrcode';
+import ActionButton from 'react-native-action-button';
+import { Icon } from 'react-native-material-design';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 export default class Home extends Component
 {
+
   openQrdCode()
   {
       this.props.navigator.push({
@@ -20,7 +25,6 @@ export default class Home extends Component
   {
       const view = (
         <View style={styles.container}>
-          <NovaConta color={BUTTON_PRIMARY} colorText={TEXT} onClick={()=> this.openQrdCode() }/>
           <ListComponent />
         </View>
       );
@@ -32,14 +36,22 @@ export default class Home extends Component
       } else {
         template =  (
             <AppAndroid title="BBOMGuard">
+
               {view}
+
+              <ActionButton
+                buttonColor="#112255"
+                buttonTextColor="#FFFFFF"
+                onPress={()=> this.openQrdCode()}
+              />
+
             </AppAndroid>
         );
       }
 
       return (
         <View style={styles.container}>
-          {template}
+            {template}
         </View>
       );
   }

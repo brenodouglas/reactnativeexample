@@ -1,9 +1,5 @@
-import React, {Component, BackAndroid, Alert, View } from 'react-native';
+import React, {Component, BackAndroid, View, AsyncStorage} from 'react-native';
 import BarcodeScanner from 'react-native-barcodescanner';
-import ContasDAO from './../../DAO/contas';
-import Api from './../../services/api';
-import moment from 'moment';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 export class QRCodeAndroid extends Component
 {
@@ -12,12 +8,10 @@ export class QRCodeAndroid extends Component
     this.state = {
       torchMode: 'off',
       cameraType: 'back',
-      api: new Api(),
-      dao: new ContasDAO(),
       visible: false
     };
 
-    BackAndroid.addEventListener('hardwareBackPress', this.back.bind(this));
+    BackAndroid.addEventListener('hardwareBackPress', () => this.back());
   }
 
   back()
@@ -27,17 +21,9 @@ export class QRCodeAndroid extends Component
   }
 
   barcodeReceived(e) {
-    this.setState({...this.state, visible: true});
-    this.state.api.getToken(e.data).then(response => {
-        this.setState({...this.state, visible: false});
-        if(response.status == false) {
-          Alert.alert('Error', response.message);
-          this.back();
-        } else {
-          this.state.dao.insert(response);
-          this.back();
-        }
-    });
+    AsyncStorage.setItem('token', e.data, () => {
+      this.back();
+    })
   }
 
   // componentWillReceiveProps(pros)
@@ -53,7 +39,6 @@ export class QRCodeAndroid extends Component
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Spinner visible={this.state.visible} />
         <BarcodeScanner
           onBarCodeRead={this.barcodeReceived.bind(this)}
           style={{ flex: 1 }}

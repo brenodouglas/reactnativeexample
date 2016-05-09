@@ -88,10 +88,8 @@ export default class ContasDAO {
         callback(result);
     }
 
-    insert(objeto)
+    insert(objeto, callback)
     {
-      const promise = new Promise();
-
       this.db.transaction((tx) => {
         return this.db.executeSql(`INSERT INTO contas(nome, usuario, hash, token, created_token) VALUES(?, ?, ?, ?, ?)`,[
               '',
@@ -100,26 +98,20 @@ export default class ContasDAO {
               objeto.token,
               moment().format('YYYY-MM-DD H:mm:ss')
           ],
-          () => promise.resolve({success: true}),
-          (err) => promise.reject(err)
+          () => callback(null, {success: true}),
+          (err) => callback(err, null)
         );
       });
-
-      return promise;
     }
 
-    refreshToken(id, token)
+    refreshToken(id, token, callback)
     {
-        const promise = new Promise();
-
         this.db.transaction((tx) => {
           return tx.executeSql("UPDATE contas SET token = ?, created_token = ? WHERE id = ?",
             [ token, moment().format('YYYY-MM-DD H:mm:ss'), id ],
-            () => promise.resolve({success: true}),
-            (err) => promise.reject(err)
+            () => callback(null, {success: true}),
+            (err) => callback(err, null)
           );
         });
-
-        return promise;
     }
 }

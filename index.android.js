@@ -14,6 +14,8 @@ import React, {
 import {AppAndroid} from './src/containers/app';
 import Home from './src/containers/home';
 import SplashScreen from '@remobile/react-native-splashscreen';
+import ActionButton from 'react-native-action-button';
+import { Icon } from 'react-native-material-design';
 
 class ReactNativeExampleNavigator extends Component {
 
@@ -30,15 +32,15 @@ class ReactNativeExampleNavigator extends Component {
               return <View style={{flex: 1,
               justifyContent: 'center',
               backgroundColor: '#FFF'}}>
-                        <StatusBar
-                           backgroundColor="#203267"
-                           barStyle="light-content"
-                         />
-                        <route.component
-                        name={route.name}
-                        navigator={navigator}
-                        index={route.index} />
-                    </View>
+                  <StatusBar
+                     backgroundColor="#203267"
+                     barStyle="light-content"
+                   />
+                  <route.component
+                  name={route.name}
+                  navigator={navigator}
+                  index={route.index} />
+              </View>
           }}
         />
     );
